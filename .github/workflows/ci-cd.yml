@@ -31,13 +31,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Version from Commit Message
+        id: extract-version
         run: |
-          VERSION=$(git log -1 --pretty=format:%B)
+          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[[:space:]]+/_/g')
           if [[ ! -z "$VERSION" ]]; then
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "VERSION=${VERSION}" >> $GITHUB_ENV
           else
-            echo "No version found in the commit message"
-            exit 1
+            echo "VERSION=latest" >> $GITHUB_ENV
           fi
 
       - name: Build and Push Docker Image
@@ -65,13 +65,13 @@ jobs:
           echo "$KUBE_CONFIG_DATA" | base64 --decode > $HOME/.kube/config
 
       - name: Extract Version from Commit Message
+        id: extract-version
         run: |
-          VERSION=$(git log -1 --pretty=format:%B)
+          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[[:space:]]+/_/g')
           if [[ ! -z "$VERSION" ]]; then
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "VERSION=${VERSION}" >> $GITHUB_ENV
           else
-            echo "No version found in the commit message"
-            exit 1
+            echo "VERSION=latest" >> $GITHUB_ENV
           fi
 
       - name: Replace Image Tag in Kubernetes Manifests
