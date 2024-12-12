@@ -33,7 +33,7 @@ jobs:
       - name: Extract Version from Commit Message
         id: extract-version
         run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[[:space:]]+/_/g')
+          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[^a-zA-Z0-9._-]/_/g')
           if [[ ! -z "$VERSION" ]]; then
             echo "VERSION=${VERSION}" >> $GITHUB_ENV
           else
@@ -67,7 +67,7 @@ jobs:
       - name: Extract Version from Commit Message
         id: extract-version
         run: |
-          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[[:space:]]+/_/g')
+          VERSION=$(echo "${{ github.event.head_commit.message }}" | sed -E 's/[^a-zA-Z0-9._-]/_/g')
           if [[ ! -z "$VERSION" ]]; then
             echo "VERSION=${VERSION}" >> $GITHUB_ENV
           else
